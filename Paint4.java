@@ -3,6 +3,7 @@ package enshu10;
 import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -22,12 +23,11 @@ import java.util.ArrayList;
 public class Paint4 extends Frame implements MouseListener, MouseMotionListener,ActionListener {
 	int x, y;
 	ArrayList<Figure> objList;//描画する全オブジェクトを管理する
-	CheckboxGroup cbg; //メニュー
-	Checkbox c1,c2,c3,c4;//メニュー要素
+	CheckboxGroup cbg,ccbg; //メニュー
+	Checkbox c1,c2,c3,c4,cc1,cc2,cc3;//メニュー要素
 	Button end;  // 終了ボタン
 	int mode = 0; //描画モード(1: 1 点指定図形2: 2 点指定図形)
 	Figure obj;
-	static int rang;
 	public static void main(String[] args) {
 		Paint4 f = new Paint4();
 		f.setSize(640, 480);
@@ -65,6 +65,17 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		addMouseMotionListener(this);
 		// 終了ボタン処理の登録
 		end.addActionListener(this);
+		
+		ccbg=new CheckboxGroup();
+		cc1=new Checkbox("赤",ccbg,false);
+		cc1.setBounds(560, 160, 60, 30);
+		add(cc1);
+		cc2=new Checkbox("緑",ccbg,false);
+		cc2.setBounds(560, 190, 60, 30);
+		add(cc2);
+		cc3=new Checkbox("青",ccbg,false);
+		cc3.setBounds(560, 210, 60, 30);
+		add(cc3);
 	}
 	
 	public void save(String fname) {
@@ -103,10 +114,11 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		System.exit(0);
 	}
 	public void mousePressed(MouseEvent e) {
-		Checkbox c;
+		Checkbox c,cc;
 		x = e.getX();
 		y = e.getY();
 		c = cbg.getSelectedCheckbox();
+		cc=ccbg.getSelectedCheckbox();
 		obj = null;
 		if(c == c1) {
 			mode =1;
@@ -117,10 +129,21 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		}else if(c == c3) {
 			mode = 2;
 			obj = new Rect();
-		}else if(c == c4) {
+		}else if(c==c4) {
 			mode = 2;
 			obj = new Line();
 		}
+		
+		if (cc == cc1) {
+			obj.color=new Color(255,0,0);
+		}
+		else if (cc == cc2) {
+			obj.color=new Color(0,255,0);
+		}
+		else if (cc == cc3) {
+			obj.color=new Color(0,0,255);
+		}
+		
 		if(obj != null){
 			obj.moveto(x,y);
 			repaint();

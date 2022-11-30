@@ -1,12 +1,13 @@
 package enshu10;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Figure extends Coord{
-	int color;
+	Color color;
 	int w,h;
 	Figure(){
-		color =0;
+		color =new Color(0,0,0);
 		w=h=0;
 	}
 	public void paint(Graphics g) {}
