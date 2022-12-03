@@ -25,7 +25,7 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 	ArrayList<Figure> objList;//描画する全オブジェクトを管理する
 	CheckboxGroup cbg,ccbg; //メニュー
 	Checkbox c1,c2,c3,c4,cc1,cc2,cc3;//メニュー要素
-	Button end;  // 終了ボタン
+	Button end,Undo;  // 終了ボタン
 	int mode = 0; //描画モード(1: 1 点指定図形2: 2 点指定図形)
 	Figure obj;
 	public static void main(String[] args) {
@@ -57,14 +57,22 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		c4 = new Checkbox("線", cbg, false); // 「線」メニューの作成
 		c4.setBounds(560, 120, 60, 30); // 「線」メニューの座標設定
 		add(c4); // 「線」メニューの追加
+		
 		end = new Button("終了"); // 「終了」ボタンの作成
 		end.setBounds(560, 300, 60, 30); // 「終了」ボタンの座標設定
 		add(end); // 「終了」メニューの追加
+		
+		Undo=new Button("削除");
+		Undo.setBounds(560, 330, 60, 30);
+		add(Undo);
+		
 		//マウス処理の登録
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		// 終了ボタン処理の登録
 		end.addActionListener(this);
+		//処理ボタンの処理の登録
+		Undo.addActionListener(this);
 		
 		ccbg=new CheckboxGroup();
 		cc1=new Checkbox("赤",ccbg,false);
@@ -110,8 +118,16 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		if(mode >= 1) obj.paint(g); // 現在作成中の要素も描画
 	}
 	@Override public void actionPerformed(ActionEvent e){//終了ボタン
+		if(e.getSource()==Undo) {
+			//objList.add(objList.size()-1,null);
+			System.out.println(objList.size());
+			objList.remove(objList.size()-1);
+			repaint();
+		}
+		else{
+			System.exit(0);
+		}
 		save("paint.dat");
-		System.exit(0);
 	}
 	public void mousePressed(MouseEvent e) {
 		Checkbox c,cc;
