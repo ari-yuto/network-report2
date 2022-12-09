@@ -20,10 +20,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.JCheckBox;
+
 public class Paint4 extends Frame implements MouseListener, MouseMotionListener,ActionListener{
 	int x, y;
 	ArrayList<Figure> objList;//描画する全オブジェクトを管理する
 	CheckboxGroup cbg,ccbg; //メニュー
+	JCheckBox fc;
 	Checkbox c1,c2,c3,c4,c5,c6,cc1,cc2,cc3,cc4;//メニュー要素
 	Button end,Undo;  // 終了ボタン
 	int mode = 0; //描画モード(1: 1 点指定図形2: 2 点指定図形)
@@ -67,12 +70,16 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		add(c6);
 		
 		end = new Button("終了"); // 「終了」ボタンの作成
-		end.setBounds(560, 320, 60, 30); // 「終了」ボタンの座標設定
+		end.setBounds(560, 350, 60, 30); // 「終了」ボタンの座標設定
 		add(end); // 「終了」メニューの追加
 		
 		Undo=new Button("削除");
-		Undo.setBounds(560, 350, 60, 30);
+		Undo.setBounds(560, 380, 60, 30);
 		add(Undo);
+		
+		fc=new JCheckBox("塗りつぶし");
+		fc.setBounds(540, 225, 90, 30);
+		add(fc);
 		
 		//マウス処理の登録
 		addMouseListener(this);
@@ -84,16 +91,16 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		
 		ccbg=new CheckboxGroup();
 		cc1=new Checkbox("赤",ccbg,false);
-		cc1.setBounds(560, 220, 60, 30);
+		cc1.setBounds(560, 260, 60, 30);
 		add(cc1);
 		cc2=new Checkbox("緑",ccbg,false);
-		cc2.setBounds(560, 240, 60, 30);
+		cc2.setBounds(560, 280, 60, 30);
 		add(cc2);
 		cc3=new Checkbox("青",ccbg,false);
-		cc3.setBounds(560, 260, 60, 30);
+		cc3.setBounds(560, 300, 60, 30);
 		add(cc3);
-		cc4=new Checkbox("黒",ccbg,false);
-		cc4.setBounds(560, 280, 60, 30);
+		cc4=new Checkbox("黒",ccbg,true);
+		cc4.setBounds(560, 320, 60, 30);
 		add(cc4);
 	}
 	
@@ -146,6 +153,7 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 			Checkbox c,cc;
 			c = cbg.getSelectedCheckbox();
 			cc=ccbg.getSelectedCheckbox();
+			boolean status=fc.isSelected();
 			switch(e.getButton()) {
 			case MouseEvent.BUTTON1:
 				x = e.getX();
@@ -179,15 +187,27 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 				//カラーを選択できるボタンを生成
 				if (cc == cc1) {
 					obj.color=new Color(255,0,0);
+					if(status==true) {
+						obj.status=true;
+					}
 				}
 				else if (cc == cc2) {
 					obj.color=new Color(0,255,0);
+					if(status==true) {
+						obj.status=true;
+					}
 				}
 				else if (cc == cc3) {
 					obj.color=new Color(0,0,255);
+					if(status==true) {
+						obj.status=true;
+					}
 				}
 				else if (cc == cc4) {
 					obj.color=new Color(0,0,0);
+					if(status==true) {
+						obj.status=true;
+					}
 				}
 
 				if(obj != null){
