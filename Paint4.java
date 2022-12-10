@@ -183,13 +183,13 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 				}
 				else if(c==c6) {
 					mode=2;
-					obj=new Polygonal();
+					obj=new Line();
 					polyLine=true;
 				}
 				else if(c==c7){
-					mode=1;
+					mode=2;
 					Pen=true;
-					obj=new Pen();
+					obj=new Line();
 				}
 				
 				//カラーを選択できるボタンを生成
@@ -231,18 +231,24 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		switch(e.getButton()){
 		case MouseEvent.BUTTON1:
 			if(polyLine==false) {
-				x=e.getX();
-				y=e.getY();
-				if(mode == 1) obj.moveto(x, y);
-				else if(mode == 2) obj.setWH(x - obj.x, y - obj.y);
-				if(mode >= 1){
-					objList.add(obj);
-					obj = null;
+				if(Pen==false) {
+					x=e.getX();
+					y=e.getY();
+					if(mode == 1) obj.moveto(x, y);
+					else if(mode == 2) obj.setWH(x - obj.x, y - obj.y);
+					if(mode >= 1){
+						objList.add(obj);
+						obj = null;
+					}
+					mode= 0;
+					repaint();
+				}else {
+					mode=0;					
+					Pen=false;
 				}
-				mode= 0;
-				repaint();
+			}else if(Pen==true) {
+				mode=0;
 				Pen=false;
-				
 			}else {
 				if(LeftClick==true) {
 					x=e.getX();
@@ -270,7 +276,7 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 				obj = null;
 				repaint();
 				
-				obj=new Polygonal();
+				obj=new Line();
 				
 				//以下は折れ線において色を付ける動作である
 				Checkbox cc;
@@ -302,13 +308,15 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 	public void mouseDragged(MouseEvent e) {
 		if(polyLine==false) {
 			if(Pen==true) {
-				obj.moveto(x, y);
-				repaint();
-				x=e.getX();
-				y=e.getY();
+				obj.x=e.getX();
+				obj.y=e.getY();
+				obj.setWH(x - obj.x, y - obj.y);
 				objList.add(obj);
+				x=obj.x;
+				y=obj.y;
 				obj = null;
-				obj=new Pen();
+				repaint();
+				obj=new Line();
 				
 				//以下はペンを利用する際の色を付ける操作である
 				Checkbox cc;
