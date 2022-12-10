@@ -27,11 +27,12 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 	ArrayList<Figure> objList;//描画する全オブジェクトを管理する
 	CheckboxGroup cbg,ccbg; //メニュー
 	JCheckBox fc;
-	Checkbox c1,c2,c3,c4,c5,c6,cc1,cc2,cc3,cc4;//メニュー要素
+	Checkbox c1,c2,c3,c4,c5,c6,c7,cc1,cc2,cc3,cc4;//メニュー要素
 	Button end,Undo;  // 終了ボタン
 	int mode = 0; //描画モード(1: 1 点指定図形2: 2 点指定図形)
 	boolean polyLine=false;
 	boolean LeftClick=false;
+	boolean Pen=false;
 	Figure obj;
 	public static void main(String[] args) {
 		Paint4 f = new Paint4();
@@ -68,17 +69,20 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		c6=new Checkbox("折れ線",cbg,false);
 		c6.setBounds(560,180,60,30);
 		add(c6);
+		c7=new Checkbox("ペン",cbg,false);
+		c7.setBounds(560,210,60,30);
+		add(c7);
 		
 		end = new Button("終了"); // 「終了」ボタンの作成
-		end.setBounds(560, 350, 60, 30); // 「終了」ボタンの座標設定
+		end.setBounds(560, 380, 60, 30); // 「終了」ボタンの座標設定
 		add(end); // 「終了」メニューの追加
 		
 		Undo=new Button("削除");
-		Undo.setBounds(560, 380, 60, 30);
+		Undo.setBounds(560, 410, 60, 30);
 		add(Undo);
 		
 		fc=new JCheckBox("塗りつぶし");
-		fc.setBounds(540, 225, 90, 30);
+		fc.setBounds(540, 255, 90, 30);
 		add(fc);
 		
 		//マウス処理の登録
@@ -91,16 +95,16 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		
 		ccbg=new CheckboxGroup();
 		cc1=new Checkbox("赤",ccbg,false);
-		cc1.setBounds(560, 260, 60, 30);
+		cc1.setBounds(560, 290, 60, 30);
 		add(cc1);
 		cc2=new Checkbox("緑",ccbg,false);
-		cc2.setBounds(560, 280, 60, 30);
+		cc2.setBounds(560, 310, 60, 30);
 		add(cc2);
 		cc3=new Checkbox("青",ccbg,false);
-		cc3.setBounds(560, 300, 60, 30);
+		cc3.setBounds(560, 330, 60, 30);
 		add(cc3);
 		cc4=new Checkbox("黒",ccbg,true);
-		cc4.setBounds(560, 320, 60, 30);
+		cc4.setBounds(560, 350, 60, 30);
 		add(cc4);
 	}
 	
@@ -181,7 +185,11 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 					mode=2;
 					obj=new Polygonal();
 					polyLine=true;
-
+				}
+				else if(c==c7){
+					mode=1;
+					Pen=true;
+					obj=new Pen();
 				}
 				
 				//カラーを選択できるボタンを生成
@@ -233,6 +241,7 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 				}
 				mode= 0;
 				repaint();
+				Pen=false;
 				
 			}else {
 				if(LeftClick==true) {
@@ -292,15 +301,44 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 	public void mouseExited(MouseEvent e) {}
 	public void mouseDragged(MouseEvent e) {
 		if(polyLine==false) {
-			x = e.getX();
-			y = e.getY();
-			if(mode == 1){
+			if(Pen==true) {
 				obj.moveto(x, y);
-			}else if(mode == 2){
-				obj.setWH(x - obj.x, y - obj.y);
+				repaint();
+				x=e.getX();
+				y=e.getY();
+				objList.add(obj);
+				obj = null;
+				obj=new Pen();
+				
+				//以下はペンを利用する際の色を付ける操作である
+				Checkbox cc;
+				cc=ccbg.getSelectedCheckbox();
+				if (cc == cc1) {
+					obj.color=new Color(255,0,0);
+				}
+				else if (cc == cc2) {
+					obj.color=new Color(0,255,0);
+				}
+				else if (cc == cc3) {
+					obj.color=new Color(0,0,255);
+				}
+				else if (cc == cc4) {
+					obj.color=new Color(0,0,0);
+				}
+				
 			}
-			repaint();
-		}else {
+			else {
+				x = e.getX();
+				y = e.getY();
+				if(mode == 1){
+					obj.moveto(x, y);
+				}else if(mode == 2){
+					obj.setWH(x - obj.x, y - obj.y);
+				}
+				repaint();
+			}
+		}
+		else {
 			x = e.getX();
 			y = e.getY();
 			obj.setWH(x - obj.x, y - obj.y);
