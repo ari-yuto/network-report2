@@ -245,9 +245,6 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 					mode=0;					
 					Pen=false;
 				}
-			}else if(Pen==true) {
-				mode=0;
-				Pen=false;
 			}else {
 				if(LeftClick==true) {
 					x=e.getX();
@@ -361,4 +358,3 @@ public class Paint4 extends Frame implements MouseListener, MouseMotionListener,
 		}
 	}
 }
-
